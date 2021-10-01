@@ -1,8 +1,7 @@
 name: flutter_paybox
 description: A Flutter package for paybox
 version: 0.0.1
-author: urma.tilekov
-homepage:
+homepage: https://github.com/urmatt/flutter_paybox
 
 environment:
   sdk: ">=2.14.0 <3.0.0"
