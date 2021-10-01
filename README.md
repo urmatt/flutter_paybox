@@ -1,14 +1,56 @@
 # flutter_paybox
 
-A Flutter package for paybox
 
-## Getting Started
+**Paybox SDK (FLutter)**
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+PayBox SDK Flutter - это библиотека позволяющая упростить взаимодействие с API PayBox. Система SDK работает на Android 4.4 и выше
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+**Описание возможностей:**
+
+- Инициализация платежа
+- Отмена платежа
+- Возврат платежа
+- Проведение клиринга
+- Проведение рекуррентного платежа с сохраненными картами
+- Получение информации/статуса платежа
+- Добавление карт/Удаление карт
+- Оплата добавленными картами
+
+**Установка:**
+
+Добавьте в ваш pubspec.yaml:
+```
+    dependencies:
+      `flutter_paybox: ^latest`
+```
+
+
+**Работа с SDK**
+
+*Инициализация SDK:*
+
+```
+    var sdk = PayboxSdk(merchantId: MERCHANT_ID, secretKey: 'YOUR_SECRET_KEY');
+```
+
+Добавьте PaymentWidget в ваш Widget:
+
+ ```
+    PaymentWidget(
+        onPaymentDone: (success){}
+    )
+ ```
+
+*Создание платежа:*
+
+```
+    try {
+        await sdk.createPayment(
+            amount: 0,
+            description: 'Payment description',
+            orderId: '001',
+        );
+    } on PayboxError catch (e) {
+        // Catch payment creation error
+    }
+```

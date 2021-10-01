@@ -10,8 +10,8 @@ import 'package:flutter_paybox/flutter_paybox.dart';
 import 'package:flutter_paybox/src/extensions/random.dart';
 
 void main() {
-  var secretKey = 'P7ONalpNZijE4ge3';
-  var merchantId = 540730;
+  var secretKey = 'SECRET_KEY';
+  var merchantId = 123456;
   var sdk = PayboxSdk(merchantId: merchantId, secretKey: secretKey);
 
   sdk.configuration.paymentSystem = PaymentSystem.EPAYWEBKGS;
