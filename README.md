@@ -21,7 +21,7 @@ PayBox Flutter - это библиотека позволяющая упрост
 Добавьте в ваш pubspec.yaml:
 ```
     dependencies:
-      `flutter_paybox: ^1.0.0`
+      flutter_paybox: ^1.0.0
 ```
 
 
@@ -38,7 +38,7 @@ PayBox Flutter - это библиотека позволяющая упрост
     var paybox = Paybox(
         merchantId: MERCHANTID,
         secretKey: SECRET_KEY,
-    )
+    );
 ```
 
 Добавьте PaymentWidget в ваш дерево виджетов и передайте paybox.controller:
@@ -57,7 +57,8 @@ PayBox Flutter - это библиотека позволяющая упрост
         Payment? payment = await paybox.createPayment(
             amount: 1,
             description: 'Payment description',
-            orderId: '001',
+            orderId: 'ORDER_ID',
+            userId: 'USER_ID'
         );
     } on PayboxError catch (e) {
         // Catch payment creation error
@@ -73,8 +74,8 @@ PayBox Flutter - это библиотека позволяющая упрост
         RecurringPayment? recurringPayment = paybox.createRecurringPayment(
             amount: 1,
             description: 'Recurring payment description',
-            recurringProfile: 'Recurring profile',
-            orderId: 'Order id',
+            recurringProfile: 'RECURRING PROFILE',
+            orderId: 'ORDER_ID',
             extraParams: {},
         );
     } on PayboxError catch (e){
