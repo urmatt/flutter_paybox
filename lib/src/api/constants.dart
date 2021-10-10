@@ -21,12 +21,12 @@ const ADDCARD_URL = "add";
 const PAY = "pay";
 const REMOVECARD_URL = "remove";
 
-String CARD_PAY(String merchant_id) {
-  return BASE_URL + "v1/merchant/" + merchant_id + CARD;
+String buildCardPayUrl(String merchantId) {
+  return BASE_URL + "v1/merchant/" + merchantId + CARD;
 }
 
-String CARD_MERCHANT(String merchant_id) {
-  return BASE_URL + "v1/merchant/" + merchant_id + CARDSTORAGE;
+String buildCardMerchantUrl(String merchantId) {
+  return BASE_URL + "v1/merchant/" + merchantId + CARDSTORAGE;
 }
 
 const RECURRING_PROFILE_ID = "pg_recurring_profile_id";

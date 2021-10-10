@@ -1,18 +1,15 @@
 import 'dart:math';
 
 import 'package:flutter_paybox/src/api/constants.dart';
-import 'package:flutter_paybox/src/config/configs.dart';
-import 'package:flutter_paybox/src/errors/PayBoxError.dart';
-import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_paybox/paybox.dart';
 import 'package:flutter_paybox/src/extensions/map_signing.dart';
-
-import 'package:flutter_paybox/flutter_paybox.dart';
 import 'package:flutter_paybox/src/extensions/random.dart';
+import 'package:flutter_test/flutter_test.dart';
+
+import './enviroments.dart';
 
 void main() {
-  var secretKey = 'SECRET_KEY';
-  var merchantId = 123456;
-  var sdk = PayboxSdk(merchantId: merchantId, secretKey: secretKey);
+  var sdk = Paybox(merchantId: MERCHANTID, secretKey: SECRET_KEY);
 
   sdk.configuration.paymentSystem = PaymentSystem.EPAYWEBKGS;
   sdk.configuration.currencyCode = 'KGS';
@@ -40,7 +37,7 @@ void main() {
       await sdk.createPayment(
         amount: 0,
         // description: '',
-        orderId: '001',
+        // orderId: '001',
       );
       fail('Expect PayboxError instead Payment');
     } on PayboxError catch (e) {
@@ -65,6 +62,13 @@ void main() {
       var status = await sdk.getPaymentStatus(pgPaymentId);
       expect(status != null, true);
       expect(status?.status, 'ok');
+
+      var cancelPayment = await sdk.cancelPayment(pgPaymentId);
+      expect(cancelPayment != null, true);
+      expect(cancelPayment?.status, 'ok');
+
+      var statusAfterCancel = await sdk.getPaymentStatus(pgPaymentId);
+      expect(statusAfterCancel != null, true);
     } on PayboxError catch (e) {
       fail(e.description ?? 'Not description');
     }

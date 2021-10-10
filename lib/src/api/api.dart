@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_paybox/src/config/configuration.dart';
 import 'package:flutter_paybox/src/errors/PayBoxError.dart';
-import 'package:flutter_paybox/src/models/payment.dart';
-import 'package:flutter_paybox/src/models/status.dart';
 
 import 'constants.dart';
 import '../extensions/map_signing.dart';
@@ -23,49 +21,18 @@ class Api {
     _dio = Dio(_baseOptions);
   }
 
-  Future<Payment?> initPayment(Map<String, dynamic>? params) async {
+  Future<String> getXmlOnSuccess(String url,
+      {Map<String, dynamic>? params}) async {
     try {
-      var response = await postRequest(INIT_PAYMENT, extraParams: params);
-      var result;
-      statusHandler(
-        response,
-        success: (xml) {
-          result = Payment.fromXml(xml);
-        },
-        failure: (error) {
-          throw error;
-        },
-      );
-      return result;
+      var response = await _postRequest(STATUS_URL, extraParams: params);
+      var xml = await _getSuccessXml(response);
+      return xml;
     } on DioError catch (e) {
-      dioErrorCatch(e);
+      throw _payboxErrorFromDioError(e);
     }
   }
 
-  Future<Status?> getStatus(Map<String, dynamic>? params) async {
-    try {
-      var response = await postRequest(STATUS_URL, extraParams: params);
-      var result;
-      statusHandler(
-        response,
-        success: (xml) {
-          result = Status.fromXml(xml);
-        },
-        failure: (error) {
-          throw error;
-        },
-      );
-      return result;
-    } on DioError catch (e) {
-      dioErrorCatch(e);
-    }
-  }
-
-  Future<Payment?> cancelPayment({int? paymentId}) async {
-    var params = Map<String, dynamic>();
-  }
-
-  Future<Response> postRequest(String url,
+  Future<Response> _postRequest(String url,
       {Map<String, dynamic>? extraParams}) {
     var signedParams = _configuration
         ?.getParams(extraParams: extraParams)
@@ -74,44 +41,39 @@ class Api {
     var formData = FormData.fromMap(signedParams ?? {});
     return _dio.post(url, data: formData);
   }
-//////// CLASS END ///////
-}
 
-void dioErrorCatch(DioError e) {
-  if (e.response != null && e.response?.data != null) {
-    throw PayboxError(description: e.response?.data?.toString());
-  } else {
-    throw PayboxError(description: e.message);
+  PayboxError _payboxErrorFromDioError(DioError e) {
+    if (e.response != null && e.response?.data != null) {
+      return PayboxError(description: e.response?.data?.toString());
+    } else {
+      return PayboxError(description: e.message);
+    }
   }
-}
 
-void statusHandler(
-  Response? response, {
-  Function(String xml)? success,
-  Function(PayboxError error)? failure,
-}) {
-  if (response?.statusCode == 200) {
-    var xml = response?.data?.toString();
-    if (xml != null && xml.isNotEmpty) {
-      if (xml.contains(RESPONSE)) {
-        if (xml.contains(STATUS)) {
-          if (xml.betweenXml(STATUS) == 'ok') {
-            success?.call(xml);
+  Future<String> _getSuccessXml(Response? response) async {
+    String errorDescription = '';
+    if (response?.statusCode == 200) {
+      var xml = response?.data?.toString();
+      if (xml != null && xml.isNotEmpty) {
+        if (xml.contains(RESPONSE)) {
+          if (xml.contains(STATUS)) {
+            if (xml.betweenXml(STATUS) == 'ok') {
+              return xml;
+            } else {
+              throw PayboxError.fromXml(xml);
+            }
           } else {
-            failure?.call(PayboxError.fromXml(xml));
+            errorDescription = 'Response not contains status';
           }
         } else {
-          failure
-              ?.call(PayboxError(description: 'Response not contains status'));
+          errorDescription = 'Body not contains response';
         }
       } else {
-        failure?.call(PayboxError(description: 'Body not contains response'));
+        errorDescription = 'Empty response';
       }
     } else {
-      failure?.call(PayboxError(description: 'Empty response'));
+      errorDescription = "Error http status: ${response?.statusCode}";
     }
-  } else {
-    failure?.call(
-        PayboxError(description: "Error http status: ${response?.statusCode}"));
+    throw PayboxError(description: errorDescription);
   }
 }

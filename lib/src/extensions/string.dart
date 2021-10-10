@@ -19,6 +19,12 @@ extension TakeBetween on String {
     return 0;
   }
 
+  double? betweenXmlDouble(String tag) {
+    var value = this.between("<$tag>", "</$tag>");
+    if (value.isNotEmpty) return double.tryParse(value);
+    return 0;
+  }
+
   int? toInt() {
     return int.tryParse(this);
   }
