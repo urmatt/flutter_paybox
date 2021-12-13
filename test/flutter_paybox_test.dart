@@ -6,7 +6,7 @@ import 'package:flutter_paybox/src/extensions/map_signing.dart';
 import 'package:flutter_paybox/src/extensions/random.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import './enviroments.dart';
+import '../lib/environments.dart';
 
 void main() {
   var sdk = Paybox(merchantId: MERCHANTID, secretKey: SECRET_KEY);

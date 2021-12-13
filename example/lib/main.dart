@@ -1,6 +1,7 @@
-import 'package:example/enviroments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paybox/paybox.dart';
+
+import 'package:flutter_paybox/environments.dart';
 
 void main() {
   runApp(const MyApp());
@@ -103,13 +104,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onCreatePayment() {
-    paybox.createPayment(
+    paybox
+        .createPayment(
       amount: 1,
       userId: "001",
       orderId: "1",
       description: "Just test payment",
-    ).then((payment) {
-      if(payment != null) {
+    )
+        .then((payment) {
+      if (payment != null) {
         paymentId = payment.paymentId;
       }
     }).onError((error, stackTrace) {

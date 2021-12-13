@@ -133,7 +133,7 @@ PayBox Flutter - это библиотека позволяющая упрост
 ```
     try {
         Payment? payment = await paybox.addNewCard(
-            userId: 123,
+            userId: '123',
             postLink: 'POST_LINK',
         );
     } on PayboxError catch (e) {
