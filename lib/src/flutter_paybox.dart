@@ -158,7 +158,7 @@ class Paybox {
     if (postLink != null) params[POST_LINK] = postLink;
 
     var cardMerchantUrl =
-        buildCardMerchantUrl("${_configuration.merchantId}$ADDCARD_URL");
+        buildCardMerchantUrl("${_configuration.merchantId}") + ADDCARD_URL;
 
     var xml = await _api.getXmlOnSuccess(cardMerchantUrl, params: params);
     var payment = Payment.fromXml(xml);
@@ -173,7 +173,7 @@ class Paybox {
     String? userId,
   }) async {
     var cardMerchantUrl =
-        buildCardMerchantUrl("${_configuration.merchantId}$REMOVECARD_URL");
+        buildCardMerchantUrl("${_configuration.merchantId}") + REMOVECARD_URL;
 
     var params = Map<String, dynamic>();
     params[CARD_ID] = cardId;
@@ -186,7 +186,7 @@ class Paybox {
 
   Future<List<Card>> getCards(String userId) async {
     var cardMerchantUrl =
-        buildCardMerchantUrl("${_configuration.merchantId}$LISTCARD_URL");
+        buildCardMerchantUrl("${_configuration.merchantId}") + LISTCARD_URL;
 
     return Card.listFromXml(
       await _api.getXmlOnSuccess(
