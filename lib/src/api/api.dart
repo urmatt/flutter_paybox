@@ -24,7 +24,7 @@ class Api {
   Future<String> getXmlOnSuccess(String url,
       {Map<String, dynamic>? params}) async {
     try {
-      var response = await _postRequest(STATUS_URL, extraParams: params);
+      var response = await _postRequest(url, extraParams: params);
       var xml = await _getSuccessXml(response);
       return xml;
     } on DioError catch (e) {
