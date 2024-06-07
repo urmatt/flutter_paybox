@@ -21,19 +21,23 @@ class Api {
     _dio = Dio(_baseOptions);
   }
 
-  Future<String> getXmlOnSuccess(String url,
-      {Map<String, dynamic>? params}) async {
+  Future<String> getXmlOnSuccess(
+    String url, {
+    Map<String, dynamic>? params,
+  }) async {
     try {
       var response = await _postRequest(url, extraParams: params);
       var xml = await _getSuccessXml(response);
       return xml;
-    } on DioError catch (e) {
-      throw _payboxErrorFromDioError(e);
+    } on DioException catch (e) {
+      throw _payBoxErrorFromDioError(e);
     }
   }
 
-  Future<Response> _postRequest(String url,
-      {Map<String, dynamic>? extraParams}) {
+  Future<Response> _postRequest(
+    String url, {
+    Map<String, dynamic>? extraParams,
+  }) {
     var signedParams = _configuration
         ?.getParams(extraParams: extraParams)
         .signedParams(url, secretKey: _secretKey);
@@ -42,7 +46,7 @@ class Api {
     return _dio.post(url, data: formData);
   }
 
-  PayboxError _payboxErrorFromDioError(DioError e) {
+  PayboxError _payBoxErrorFromDioError(DioException e) {
     if (e.response != null && e.response?.data != null) {
       return PayboxError(description: e.response?.data?.toString());
     } else {

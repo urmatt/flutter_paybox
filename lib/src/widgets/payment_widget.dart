@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_paybox/src/flutter_paybox.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class PaymentWidget extends StatefulWidget {
   static _PaymentWidgetState? of(BuildContext context, {bool root = false}) =>
@@ -28,44 +31,64 @@ class PaymentWidget extends StatefulWidget {
 class _PaymentWidgetState extends State<PaymentWidget> {
   String blankPage = 'about:blank';
 
-  WebViewController? _webViewController;
+  late WebViewController _webViewController;
 
   bool isPaymentDone = false;
   String? _pageUrl;
 
+  Uri get _initialUri => Uri.parse(getUrl());
+
   @override
   void initState() {
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    late final PlatformWebViewControllerCreationParams params;
+    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
+      params = WebKitWebViewControllerCreationParams(
+        allowsInlineMediaPlayback: true,
+        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
+      );
+    } else {
+      params = const PlatformWebViewControllerCreationParams();
+    }
+
+    _webViewController = WebViewController.fromPlatformCreationParams(params);
+
+    _webViewController
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xFFFFFFFF))
+      ..loadRequest(_initialUri)
+      ..setNavigationDelegate(_navigationDelegate);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     widget.controller?.targetContext = context;
-    return WebView(
-      initialUrl: getUrl(),
-      javascriptMode: JavascriptMode.unrestricted,
-      navigationDelegate: onNavigationDelegate,
-      onWebViewCreated: (controller) => _webViewController = controller,
+    return WebViewWidget(
+      controller: _webViewController,
     );
   }
 
-  void setUrl(String? url) {
-    setState(() {
-      _pageUrl = url;
-      if (_webViewController != null)
-        _webViewController
-            ?.loadUrl(url?.isEmpty == true ? blankPage : (url ?? blankPage));
-    });
-  }
+  NavigationDelegate get _navigationDelegate => NavigationDelegate(
+        onNavigationRequest: _onNavigationRequest,
+      );
 
-  NavigationDecision onNavigationDelegate(NavigationRequest request) {
+  FutureOr<NavigationDecision> _onNavigationRequest(NavigationRequest request) {
     if (request.url.contains('success')) {
       paymentDone(true);
     } else if (request.url.contains('failure')) {
       paymentDone(false);
     }
     return NavigationDecision.navigate;
+  }
+
+  void setUrl(String url) {
+    assert(url.isNotEmpty);
+
+    setState(() {
+      _pageUrl = url;
+      if (_webViewController != null)
+        _webViewController?.loadRequest(Uri.parse(url));
+    });
   }
 
   String getUrl() {

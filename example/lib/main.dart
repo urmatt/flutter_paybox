@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_paybox/paybox.dart';
 
@@ -65,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         actions: [
           PopupMenuButton<int>(
-            icon: Icon(
+            icon: const Icon(
               Icons.menu,
             ),
             onSelected: (value) {
@@ -92,11 +93,13 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PaymentWidget(
         controller: paybox.controller,
         onPaymentDone: (success) {
-          print("Payment success");
+          if (kDebugMode) {
+            print("Payment success: $success");
+          }
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => null,
+        onPressed: () {},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),

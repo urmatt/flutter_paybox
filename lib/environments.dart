@@ -1,0 +1,2 @@
+const MERCHANTID = 541387;
+const SECRET_KEY = 'sWhiu69367527doh';
