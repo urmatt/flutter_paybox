@@ -21,7 +21,7 @@ PayBox Flutter - это библиотека позволяющая упрост
 Добавьте в ваш pubspec.yaml:
 ```
     dependencies:
-      flutter_paybox: ^1.0.0
+      flutter_paybox: ^1.1.1
 ```
 
 

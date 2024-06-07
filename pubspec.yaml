@@ -1,6 +1,6 @@
 name: flutter_paybox
 description: A Flutter package for paybox
-version: 1.1.0
+version: 1.1.1
 homepage: https://github.com/urmatt/flutter_paybox
 
 environment:
@@ -13,6 +13,8 @@ dependencies:
   dio: ^5.4.3+1
   crypto: ^3.0.3
   webview_flutter: ^4.8.0
+  webview_flutter_wkwebview: ^3.13.1
+  webview_flutter_android: ^3.16.3
 
 dev_dependencies:
   flutter_test:
