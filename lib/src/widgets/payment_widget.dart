@@ -1,10 +1,8 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_paybox/src/flutter_paybox.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 class PaymentWidget extends StatefulWidget {
@@ -86,8 +84,7 @@ class _PaymentWidgetState extends State<PaymentWidget> {
 
     setState(() {
       _pageUrl = url;
-      if (_webViewController != null)
-        _webViewController?.loadRequest(Uri.parse(url));
+      _webViewController.loadRequest(Uri.parse(url));
     });
   }
 
