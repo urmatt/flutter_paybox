@@ -119,6 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
         paymentId = payment.paymentId;
       }
     }).onError((error, stackTrace) {
+      if (kDebugMode) print(error);
       // Handle PayboxError
     });
   }

@@ -28,7 +28,7 @@ class Configuration {
     this.userPhone,
     this.userEmail,
     this.testMode = true,
-    this.paymentSystem = PaymentSystem.EPAYWEBKZT,
+    this.paymentSystem = PaymentSystem.EPAYWEBKGS,
     this.requestMethod = RequestMethod.POST,
     this.language = Language.ru,
     this.autoClearing = false,
@@ -39,7 +39,7 @@ class Configuration {
     this.checkUrl,
     this.resultUrl = "https://paybox.kz",
     this.captureUrl,
-    this.currencyCode = "KZT",
+    this.currencyCode = "KGS",
     this.successUrl = BASE_URL + "success",
     this.failureUrl = BASE_URL + "failure",
   }) : assert(merchantId != null && merchantId != 0);
